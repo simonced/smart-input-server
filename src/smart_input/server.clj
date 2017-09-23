@@ -45,38 +45,49 @@
 (def buffer (make-array Byte/TYPE 1024))
 
 
+(defn parse-mouse-data [data]
+  "Parsing mouse signal data and act accordingly.
+Data format: X+n,Y+m where + can also be - and n and m are numbers.
+What to do if n and m are not parseable? Actually an exception is raised. 
+Return true if data are correctly formated for the operation.
+False otherwise."
+  (println "move mouse!" data)
+  (let [[_ x-offset y-offset] (re-matches #"X([+-]\d+),Y([+-]\d+)" data)
+        mouse-pos (get-mouse-position)]
+    (set-mouse-position (+ (:x mouse-pos) (Integer. x-offset))
+                        (+ (:y mouse-pos) (Integer. y-offset)))
+    true))
+
+
 ;; handling packet data
 (defn parse [packet]
-  "TODO parse received messages and make action. First to come:
-- moving the mouse"
-  (let [message (String. (.getData packet) 0 (.getLength packet))]
+  "WIP parse received messages and make action.
+- MOUSE :: moving the mouse
+- EXIT :: stoping the server from the client"
+  (let [message (String. (.getData packet) 0 (.getLength packet))
+        [_ signal data] (re-matches #"^([A-Z]*):(.*)" message)]
     (println "received message >" message "<")
-    ;; we return the new running state
-    ;; false to stop the server if we received the EXIT message
-    (if (re-matches #"^EXIT" message)
-      false
-      true)
+
+    ;; what messages do we handle?
+    (case signal
+      "MOUSE" (parse-mouse-data data)
+      false) 
+    ;; TODO add other signals
     ))
 
 
-(defn stop-server []
-  "Stopping the server."
-  (reset! running false)
-  (println "Stopping the server!"))
-
-
-(defn start-server []
+(defn -main []
   "Starting the udp server!"
   (reset! running true)
-
+  (println "running")
+  
   ;; waiting loop
   (while (true? @running)
     (let [packet (DatagramPacket. buffer 1024)]
       (do
-        (println "running")
         (.receive socket packet)
         (reset! running  @(future (parse packet)))
         ;; @ of a future will deference it and return the value of the computation!
-        ;; (println "new running state >" @running "<")
-        ;; (stop-server)                   ; temporary for tests
-        ))))
+        (println "new running state >" @running "<")
+        )))
+  (System/exit 0))
