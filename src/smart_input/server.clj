@@ -1,4 +1,4 @@
-(ns mouse-mover.core)
+(ns smart-input.server)
 
 ;; Ref: https://gist.github.com/stingh711/3760481
 ;; ==============================================
@@ -50,15 +50,33 @@
   "TODO parse received messages and make action. First to come:
 - moving the mouse"
   (let [message (String. (.getData packet) 0 (.getLength packet))]
-    (println message)))
+    (println "received message >" message "<")
+    ;; we return the new running state
+    ;; false to stop the server if we received the EXIT message
+    (if (re-matches #"^EXIT" message)
+      false
+      true)
+    ))
 
+
+(defn stop-server []
+  "Stopping the server."
+  (reset! running false)
+  (println "Stopping the server!"))
 
 
 (defn start-server []
-  ;; Do something about how to stop that infinite loop!
+  "Starting the udp server!"
+  (reset! running true)
+
+  ;; waiting loop
   (while (true? @running)
     (let [packet (DatagramPacket. buffer 1024)]
       (do
         (println "running")
         (.receive socket packet)
-        (future (parse packet))))))
+        (reset! running  @(future (parse packet)))
+        ;; @ of a future will deference it and return the value of the computation!
+        ;; (println "new running state >" @running "<")
+        ;; (stop-server)                   ; temporary for tests
+        ))))
