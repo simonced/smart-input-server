@@ -9,6 +9,7 @@
 ;;; Rotot class
 (import java.awt.Robot)
 (import java.awt.MouseInfo)
+(import java.awt.event.InputEvent)
 (import java.awt.Toolkit)
 
 
@@ -45,7 +46,7 @@
 (def buffer (make-array Byte/TYPE 1024))
 
 
-(defn parse-mouse-data [data]
+(defn parse-mouse-data-move [data]
   "Parsing mouse signal data and act accordingly.
 Data format: X+n,Y+m where + can also be - and n and m are numbers.
 What to do if n and m are not parseable? Actually an exception is raised. 
@@ -59,18 +60,29 @@ False otherwise."
     true))
 
 
+(defn parse-mouse-data-click [data]
+  "Makes the mouse click
+TODO deal with different buttons, for now only left click (ie, data ignored)"
+  (println "mouse click!" data)
+  (.mousePress robot InputEvent/BUTTON1_MASK)
+  (.mouseRelease robot InputEvent/BUTTON1_MASK)
+  true)
+
+
 ;; handling packet data
 (defn parse [packet]
   "WIP parse received messages and make action.
-- MOUSE :: moving the mouse
+- MOUSE_MOVE :: moving the mouse
+- MOUSE_CLICK :: click the mouse button (1:left)
 - EXIT :: stoping the server from the client"
   (let [message (String. (.getData packet) 0 (.getLength packet))
-        [_ signal data] (re-matches #"^([A-Z]*):(.*)" message)]
+        [_ signal data] (re-matches #"^([A-Z_]+):(.*)" message)]
     (println "received message >" message "<")
 
     ;; what messages do we handle?
     (case signal
-      "MOUSE" (parse-mouse-data data)
+      "MOUSE_MOVE" (parse-mouse-data-move data)
+      "MOUSE_CLICK" (parse-mouse-data-click data)
       false) 
     ;; TODO add other signals
     ))
