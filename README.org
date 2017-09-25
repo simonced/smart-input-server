@@ -2,7 +2,7 @@
 A simple server application to translate input from a smartphone onto a computer.\\
 The concept is simply to use smartphone as an input device for pointer (mouse) and keys (keyboard).
 
-*The server part is done in Clojure because i want to practice with it for a while.*
+/The server part is done in Clojure because i want to practice with it for a while./
 
 Could be configured per application and shortcut buttons could be created.\\
 That is a basic idea for now...
@@ -15,10 +15,11 @@ All signals are transmitted by UDP.
 
 The format is like so:
 
-| signal name | parameters | sample              | explanation                                      |
-|-------------+------------+---------------------+--------------------------------------------------|
-| MOUSE_MOVE  | X+n,Y+m    | MOUSE_MOVE:X+10,Y-5 | moves the mouse 10px on X axis, and -5 on Y axis |
-| MOUSE_CLICK | 1          | MOUSE_CLICK:1       | press the mouse button 1 (left) then release it  |
+| signal name | parameters | sample              | explanation                                      | Status |
+|-------------+------------+---------------------+--------------------------------------------------+--------|
+| MOUSE_MOVE  | X+n,Y+m    | MOUSE_MOVE:X+10,Y-5 | moves the mouse 10px on X axis, and -5 on Y axis | DONE   |
+| MOUSE_CLICK | 1          | MOUSE_CLICK:1       | press the mouse button 1 (left) then release it  | DONE   |
+| KEY_PRESS   | <a>        | KEY_PRESS:a         | press the key "a" on the keyboard and release it | WIP    |
 
 For now, only /mouse1/ is handeled.
 
