@@ -12,6 +12,7 @@
 (import java.awt.event.InputEvent)
 (import java.awt.Toolkit)
 (import java.awt.event.KeyEvent)
+(import java.awt.im.InputContext)
 
 
 ;;; screen settings
@@ -39,7 +40,8 @@
   (.mouseMove robot x y))
 
 
-;;; Keyboard related
+;;; ==================== Keyboard related ====================
+
 ;;; reading about Keys: https://docs.oracle.com/javase/7/docs/api/java/awt/event/KeyEvent.html
 (defn key-press [data]
   "Simply simulates key presses.
@@ -48,6 +50,11 @@ TODO layouts needs to be handled differently for non alphanumeric characters!"
   (.keyPress   robot KeyEvent/VK_4)       ;only one key for now: Shift+4 = $ (JIS layout)...
   (.keyRelease robot KeyEvent/VK_4)
   (.keyRelease robot KeyEvent/VK_SHIFT))
+
+
+(defn key-detect-layout []
+  "Trying to detect keyboard layout."
+  (.toString (.getLocale (InputContext/getInstance))))
 
 
 ;;; ==================== server related ===================
