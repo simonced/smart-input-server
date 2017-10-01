@@ -14,6 +14,11 @@
 (import java.awt.event.KeyEvent)
 (import java.awt.im.InputContext)
 
+;;; utilities
+(require '[clojure.string :as str])
+
+;;; my keyboard layout lib
+(use '[smart-input.keyboard-layout :as kbl])
 
 ;;; screen settings
 (defn get-screen-size []
@@ -23,9 +28,14 @@
     ))
 
 
-;;; ==================== mouse related ====================
+;;; ==================== automation ====================
+
 
 (def robot (new Robot))
+
+
+;;; ==================== mouse related ====================
+
 
 ;;; current mouse position
 (defn get-mouse-position []
@@ -42,25 +52,60 @@
 
 ;;; ==================== Keyboard related ====================
 
-;;; reading about Keys: https://docs.oracle.com/javase/7/docs/api/java/awt/event/KeyEvent.html
-(defn key-press [data]
-  "Simply simulates key presses.
-TODO layouts needs to be handled differently for non alphanumeric characters!"
-  (.keyPress   robot KeyEvent/VK_SHIFT)
-  (.keyPress   robot KeyEvent/VK_4)       ;only one key for now: Shift+4 = $ (JIS layout)...
-  (.keyRelease robot KeyEvent/VK_4)
-  (.keyRelease robot KeyEvent/VK_SHIFT))
-
-
 (defn key-detect-layout []
   "Trying to detect keyboard layout."
   (.toString (.getLocale (InputContext/getInstance))))
+
+(def key-layout (keyword (key-detect-layout)))
+
+
+;;; pressing key sequences for a symbol requiring modifiers
+;;; like some punctuation
+(defn key-press-symbol [seq_]
+  "Pressing keys in sequence"
+  (let [[action keycode] (first seq_) next (rest seq_)]
+    (case action
+      :down (.keyPress robot keycode)
+      :up   (.keyRelease robot keycode)
+      nil
+      )
+    
+    ;; calling again with the rest of the sequence
+    ;; (println next)
+    (cond (not (empty? next))
+          ;; (println "next call")
+          (key-press-symbol next)))
+  )
+
+
+(defn key-press [symbol]
+  "Simply simulates key presses.
+Layouts needs to be handled differently for non alphanumeric characters!"
+  (let [key-seq (kbl/press-on-layout key-layout symbol)]
+    (if key-seq
+      (key-press-symbol key-seq)
+      (println "No key seq found!")))
+  )
+
+
+;;; reading about Keys: https://docs.oracle.com/javase/7/docs/api/java/awt/event/KeyEvent.html
+(defn key-press-chord [chord]
+  "Press chords of keys like <Ctrl> + <a>"
+  (let [start (first chord) next (rest chord)]
+    (case start
+      "C" (do (.keyPress robot KeyEvent/VK_CONTROL) (key-press-chord next) (.keyRelease robot KeyEvent/VK_CONTROL))
+      "A" (do (.keyPress robot KeyEvent/VK_ALT) (key-press-chord next) (.keyRelease robot KeyEvent/VK_ALT))
+      "S" (do (.keyPress robot KeyEvent/VK_SHIFT) (key-press-chord next) (.keyRelease robot KeyEvent/VK_SHIFT))
+      (key-press start)
+      )))
+
 
 
 ;;; ==================== server related ===================
 
 ;; socket
-(def socket (DatagramSocket. 5200))     ; need to learn the meaning of that writing style...
+(def socket-port 5200)
+(def socket (DatagramSocket. socket-port))     ; need to learn the meaning of that writing style...
 (def running (atom true))               ;can we change that @running at runtime?
 (def buffer (make-array Byte/TYPE 1024))
 
@@ -79,9 +124,25 @@ False otherwise."
     true))
 
 
+(defn parse-key-data [data]
+  "Parsing key press data and act accordingly.
+Data format: 
+- a will press the letter a (or any other single symbol)
+- C-a will press Ctrl + a
+- S-s will press Shift + a
+- A-a will press Alt + a
+and combinaisons will be possible like:
+- C-A-b wil press Ctrl + Alt + b
+"
+  (let [chord (str/split data #"-")]
+    ;; (println chord)
+    (key-press-chord chord))
+  )
+
+
 (defn parse-mouse-data-click [data]
   "Makes the mouse click
-TODO deal with different buttons, for now only left click (ie, data ignored)"
+TODO deal with different buttons, for now only left click (=> data ignored)"
   (println "mouse click!" data)
   (.mousePress robot InputEvent/BUTTON1_MASK)
   (.mouseRelease robot InputEvent/BUTTON1_MASK)
@@ -102,6 +163,7 @@ TODO deal with different buttons, for now only left click (ie, data ignored)"
     (case signal
       "MOUSE_MOVE" (parse-mouse-data-move data)
       "MOUSE_CLICK" (parse-mouse-data-click data)
+      "KEY_PRESS" (parse-key-data)
       false) 
     ;; TODO add other signals
     ))
@@ -110,7 +172,7 @@ TODO deal with different buttons, for now only left click (ie, data ignored)"
 (defn -main []
   "Starting the udp server!"
   (reset! running true)
-  (println "running")
+  (println "running.\nPort:" socket-port "\nKeyboard layout:" key-layout)
   
   ;; waiting loop
   (while (true? @running)

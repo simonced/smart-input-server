@@ -15,13 +15,19 @@ All signals are transmitted by UDP.
 
 The format is like so:
 
-| signal name | parameters | sample              | explanation                                      | Status |
-|-------------+------------+---------------------+--------------------------------------------------+--------|
-| MOUSE_MOVE  | X+n,Y+m    | MOUSE_MOVE:X+10,Y-5 | moves the mouse 10px on X axis, and -5 on Y axis | DONE   |
-| MOUSE_CLICK | 1          | MOUSE_CLICK:1       | press the mouse button 1 (left) then release it  | DONE   |
-| KEY_PRESS   | <a>        | KEY_PRESS:a         | press the key "a" on the keyboard and release it | WIP    |
+| signal name     | parameters | sample              | explanation                                      | Status |
+|-----------------+------------+---------------------+--------------------------------------------------+--------|
+| MOUSE_MOVE      | X+n,Y+m    | MOUSE_MOVE:X+10,Y-5 | moves the mouse 10px on X axis, and -5 on Y axis | DONE   |
+| MOUSE_CLICK (1) | 1          | MOUSE_CLICK:1       | press the mouse button 1 (left) then release it  | DONE   |
+| KEY_PRESS (2)   | <a>        | KEY_PRESS:a         | press the key "a" on the keyboard and release it | WIP    |
 
-For now, only /mouse1/ is handeled.
+*(1)* For now, only /mouse1/ is handeled.
+
+*(2)* Key_press can receive modifiers as well like:
+- C-c :: means <ctrl> + <c>
+- A-d :: means <alt> + <d>
+- S-u :: means <shift> + <u>
+- C-A-S-s :: means <ctrl> + <alt> + <shift> + <s>
 
 * What's next
 For now, Windows plateform is supported for the server.
