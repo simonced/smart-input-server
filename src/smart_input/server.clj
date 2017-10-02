@@ -123,20 +123,27 @@ False otherwise."
                         (+ (:y mouse-pos) (Integer. y-offset)))
     true))
 
-
-(defn parse-key-data [data]
-  "Parsing key press data and act accordingly.
+(defn parse-key-chord [chord-data]
+  "Utility function that parses one chord at a time.
 Data format: 
 - a will press the letter a (or any other single symbol)
 - C-a will press Ctrl + a
 - S-s will press Shift + a
 - A-a will press Alt + a
 and combinaisons will be possible like:
-- C-A-b wil press Ctrl + Alt + b
-"
-  (let [chord (str/split data #"-")]
+- C-A-b wil press Ctrl + Alt + b"
+  (let [chord (str/split chord-data #"-")]
     ;; (println chord)
-    (key-press-chord chord))
+    (key-press-chord chord)))
+
+
+(defn parse-key-data [data]
+  "Parsing key press data and act accordingly.
+Mutliple chords can be sent if separated by a space.
+ie: a b c C-a
+will push in sequence a,b,c then Ctrl+a"
+  (let [chords (str/split data #" ")]
+    (map parse-key-chord chords))
   )
 
 

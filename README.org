@@ -23,11 +23,20 @@ The format is like so:
 
 *(1)* For now, only /mouse1/ is handeled.
 
-*(2)* Key_press can receive modifiers as well like:
+*(2)*\\
+Key_press can receive modifiers as well like:
 - C-c :: means <ctrl> + <c>
 - A-d :: means <alt> + <d>
 - S-u :: means <shift> + <u>
 - C-A-S-s :: means <ctrl> + <alt> + <shift> + <s>
+
+Also, sequence of keys or chords can be sent:
+- a b c :: means <a> <b> <c>
+- a b C-a :: means <a> <b> <ctrl>+<a>
+
+Can be used for macros in games, complex shortcuts etc...
+
+*NOTE* Please do not use for passwords, because the UDP connexion is not secured.
 
 * What's next
 For now, Windows plateform is supported for the server.
