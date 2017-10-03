@@ -123,6 +123,7 @@ False otherwise."
                         (+ (:y mouse-pos) (Integer. y-offset)))
     true))
 
+
 (defn parse-key-chord [chord-data]
   "Utility function that parses one chord at a time.
 Data format: 

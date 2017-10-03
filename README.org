@@ -7,6 +7,14 @@ The concept is simply to use smartphone as an input device for pointer (mouse) a
 Could be configured per application and shortcut buttons could be created.\\
 That is a basic idea for now...
 
+** Keyboard layouts support:
+
+I am currently working with a JIS layout keyboard (japanese layout) and will support it first.
+
+But I plan to next support ANSI and ISO us layouts.\\
+PRs are welcome if you want to provide layout support.\\
+Please have a look at [[src/smart_input/keyboard_layout.clj]] for implementation details.
+
 * Usage
 Sample and some usage details.
 
@@ -30,13 +38,31 @@ Key_press can receive modifiers as well like:
 - S-u :: means <shift> + <u>
 - C-A-S-s :: means <ctrl> + <alt> + <shift> + <s>
 
+Special keys:
+- <tab> :: means <tab>
+- <cr> :: means <enter>
+- <bs> :: means <backspace>
+- <del> :: means <delete>
+
+TODO special keys:
+- Esc
+- Home
+- End
+- Insert
+- PageUp
+- PageDown
+- F keys
+- SPACE
+- arrow keys
+
 Also, sequence of keys or chords can be sent:
 - a b c :: means <a> <b> <c>
 - a b C-a :: means <a> <b> <ctrl>+<a>
 
 Can be used for macros in games, complex shortcuts etc...
 
-*NOTE* Please do not use for passwords, because the UDP connexion is not secured.
+*NOTE*\\
+Please do not use for passwords, because the UDP connexion is not secured.
 
 * What's next
 For now, Windows plateform is supported for the server.

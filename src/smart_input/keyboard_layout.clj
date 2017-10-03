@@ -29,6 +29,10 @@
                "x" [[:down KeyEvent/VK_X] [:up KeyEvent/VK_X]]
                "y" [[:down KeyEvent/VK_Y] [:up KeyEvent/VK_Y]]
                "z" [[:down KeyEvent/VK_Z] [:up KeyEvent/VK_Z]]
+               "<tab>"  [[:down KeyEvent/VK_TAB] [:up KeyEvent/VK_TAB]]
+               "<cr>"  [[:down KeyEvent/VK_ENTER] [:up KeyEvent/VK_ENTER]]
+               "<bs>"  [[:down KeyEvent/VK_BACK_SPACE] [:up KeyEvent/VK_BACK_SPACE]]
+               "<del>"  [[:down KeyEvent/VK_DELETE] [:up KeyEvent/VK_DELETE]]
                })
 
 
