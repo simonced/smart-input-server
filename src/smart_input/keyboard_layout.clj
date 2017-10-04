@@ -29,10 +29,16 @@
                "x" [[:down KeyEvent/VK_X] [:up KeyEvent/VK_X]]
                "y" [[:down KeyEvent/VK_Y] [:up KeyEvent/VK_Y]]
                "z" [[:down KeyEvent/VK_Z] [:up KeyEvent/VK_Z]]
-               "<tab>"  [[:down KeyEvent/VK_TAB] [:up KeyEvent/VK_TAB]]
-               "<cr>"  [[:down KeyEvent/VK_ENTER] [:up KeyEvent/VK_ENTER]]
-               "<bs>"  [[:down KeyEvent/VK_BACK_SPACE] [:up KeyEvent/VK_BACK_SPACE]]
-               "<del>"  [[:down KeyEvent/VK_DELETE] [:up KeyEvent/VK_DELETE]]
+               "<tab>"    [[:down KeyEvent/VK_TAB]        [:up KeyEvent/VK_TAB]]
+               "<cr>"     [[:down KeyEvent/VK_ENTER]      [:up KeyEvent/VK_ENTER]]
+               "<bs>"     [[:down KeyEvent/VK_BACK_SPACE] [:up KeyEvent/VK_BACK_SPACE]]
+               "<ins>"    [[:down KeyEvent/VK_INSERT]     [:up KeyEvent/VK_INSERT]]
+               "<del>"    [[:down KeyEvent/VK_DELETE]     [:up KeyEvent/VK_DELETE]]
+               "<esc>"    [[:down KeyEvent/VK_ESCAPE]     [:up KeyEvent/VK_ESCAPE]]
+               "<home>"   [[:down KeyEvent/VK_HOME]       [:up KeyEvent/VK_HOME]]
+               "<end>"    [[:down KeyEvent/VK_END]        [:up KeyEvent/VK_END]]
+               "<pgup>"   [[:down KeyEvent/VK_PAGE_UP]    [:up KeyEvent/VK_PAGE_UP]]
+               "<pgdown>" [[:down KeyEvent/VK_PAGE_DOWN]    [:up KeyEvent/VK_PAGE_DOWN]]
                })
 
 
