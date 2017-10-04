@@ -12,7 +12,8 @@ That is a basic idea for now...
 I am currently working with a JIS layout keyboard (japanese layout) and will support it first.
 
 But I plan to next support ANSI and ISO us layouts.\\
-PRs are welcome if you want to provide layout support.\\
+PRs are welcome if you want to provide layout support.
+
 Please have a look at [[src/smart_input/keyboard_layout.clj]] for implementation details.
 
 * Usage
@@ -47,7 +48,6 @@ Can be used for macros in games, complex shortcuts etc...
 *NOTE*\\
 Please do not use for passwords, because the UDP connexion is not secured.
 
-
 *** Special keys
 
 | Code                          | Key meaning | Status |
@@ -60,8 +60,8 @@ Please do not use for passwords, because the UDP connexion is not secured.
 | <del>                         | Delete      | DONE   |
 | <home>                        | Home        | DONE   |
 | <end>                         | End         | DONE   |
-| <pgup>                        | Page Up     | TODO   |
-| <pgdown>                      | Page Down   | TODO   |
+| <pgup>                        | Page Up     | DONE   |
+| <pgdown>                      | Page Down   | DONE   |
 | <f1> ~ <f12>                  | F1~F12 keys | TODO   |
 | <space>                       | SPACE       | TODO   |
 | <up>, <right>, <down>, <left> | arrow keys  | TODO   |
