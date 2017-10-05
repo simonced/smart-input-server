@@ -62,9 +62,9 @@ Please do not use for passwords, because the UDP connexion is not secured.
 | <end>                         | End         | DONE   |
 | <pgup>                        | Page Up     | DONE   |
 | <pgdown>                      | Page Down   | DONE   |
-| <f1> ~ <f12>                  | F1~F12 keys | TODO   |
-| <space>                       | SPACE       | TODO   |
-| <up>, <right>, <down>, <left> | arrow keys  | TODO   |
+| <f1> ~ <f12>                  | F1~F12 keys | DONE   |
+| <space>                       | SPACE       | DONE   |
+| <up>, <right>, <down>, <left> | arrow keys  | DONE   |
 
 * What's next
 For now, Windows plateform is supported for the server.
