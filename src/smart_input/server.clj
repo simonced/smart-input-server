@@ -146,9 +146,10 @@ Mutliple chords can be sent if separated by a space.
 ie: a b c C-a
 will push in sequence a,b,c then Ctrl+a"
   (let [chords (str/split data #" ")]
-    (println "chords received: " chords) ; something is off here, suche sequence doesn't work: "A-<tab> a a a"
-    (map parse-key-chord chords))
-  true
+    (println "keys received: " chords)
+    (doseq [c chords] (parse-key-chord c))
+    ;; seems to be working, but too fast?
+    true)
   )
 
 
