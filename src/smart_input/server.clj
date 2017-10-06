@@ -90,11 +90,12 @@ Layouts needs to be handled differently for non alphanumeric characters!"
 
 ;;; reading about Keys: https://docs.oracle.com/javase/7/docs/api/java/awt/event/KeyEvent.html
 (defn key-press-chord [chord]
-  "Press chords of keys like <Ctrl> + <a>"
+  "Press chords of keys like <Ctrl> + <a>.
+chord parameter syntax: C-a"
   (let [start (first chord) next (rest chord)]
     (case start
       "C" (do (.keyPress robot KeyEvent/VK_CONTROL) (key-press-chord next) (.keyRelease robot KeyEvent/VK_CONTROL))
-      "A" (do (.keyPress robot KeyEvent/VK_ALT) (key-press-chord next) (.keyRelease robot KeyEvent/VK_ALT))
+      "A" (do (println "pressing alt + " next) (.keyPress robot KeyEvent/VK_ALT) (key-press-chord next) (.keyRelease robot KeyEvent/VK_ALT))
       "S" (do (.keyPress robot KeyEvent/VK_SHIFT) (key-press-chord next) (.keyRelease robot KeyEvent/VK_SHIFT))
       (key-press start)
       )))
@@ -134,8 +135,9 @@ Data format:
 and combinaisons will be possible like:
 - C-A-b wil press Ctrl + Alt + b"
   (let [chord (str/split chord-data #"-")]
-    ;; (println chord)
-    (key-press-chord chord)))
+    (println "parsing chord:" chord)
+    (key-press-chord chord))
+  )
 
 
 (defn parse-key-data [data]
@@ -144,7 +146,9 @@ Mutliple chords can be sent if separated by a space.
 ie: a b c C-a
 will push in sequence a,b,c then Ctrl+a"
   (let [chords (str/split data #" ")]
+    (println "chords received: " chords) ; something is off here, suche sequence doesn't work: "A-<tab> a a a"
     (map parse-key-chord chords))
+  true
   )
 
 
@@ -165,13 +169,13 @@ TODO deal with different buttons, for now only left click (=> data ignored)"
 - EXIT :: stoping the server from the client"
   (let [message (String. (.getData packet) 0 (.getLength packet))
         [_ signal data] (re-matches #"^([A-Z_]+):(.*)" message)]
-    (println "received message >" message "<")
+    (println "received message: " message)
 
     ;; what messages do we handle?
     (case signal
       "MOUSE_MOVE" (parse-mouse-data-move data)
       "MOUSE_CLICK" (parse-mouse-data-click data)
-      "KEY_PRESS" (parse-key-data)
+      "KEY_PRESS" (parse-key-data data)
       false) 
     ;; TODO add other signals
     ))
