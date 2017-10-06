@@ -32,6 +32,7 @@
 
 
 (def robot (new Robot))
+(.setAutoDelay robot 50)                ; delay between key presses in ms
 
 
 ;;; ==================== mouse related ====================
@@ -148,7 +149,6 @@ will push in sequence a,b,c then Ctrl+a"
   (let [chords (str/split data #" ")]
     (println "keys received: " chords)
     (doseq [c chords] (parse-key-chord c))
-    ;; seems to be working, but too fast?
     true)
   )
 
