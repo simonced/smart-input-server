@@ -1,3 +1,5 @@
+#+title: README
+
 * Smart-input-server
 A simple server application to translate input from a smartphone onto a computer.\\
 The concept is simply to use smartphone as an input device for pointer (mouse) and keys (keyboard).
@@ -14,7 +16,7 @@ I am currently working with a JIS layout keyboard (japanese layout) and will sup
 But I plan to next support ANSI and ISO us layouts.\\
 PRs are welcome if you want to provide layout support.
 
-Please have a look at [[src/smart_input/keyboard_layout.clj]] for implementation details.
+Please have a look at file:src/smart_input/keyboard_layout.clj for implementation details.
 
 * Usage
 Sample and some usage details.
@@ -65,6 +67,59 @@ Please do not use for passwords, because the UDP connexion is not secured.
 | <f1> ~ <f12>                  | F1~F12 keys | DONE   |
 | <space>                       | SPACE       | DONE   |
 | <up>, <right>, <down>, <left> | arrow keys  | DONE   |
+|-------------------------------+-------------+--------|
+| *Punctuation*                 |             |        |
+|-------------------------------+-------------+--------|
+| <exclamation>                 | !           | TODO   |
+| <question>                    | ?           | TODO   |
+| <period>                      | .           | TODO   |
+| <comma>                       | ,           | TODO   |
+| <colon>                       | :           | TODO   |
+| <semicolon>                   | ;           | TODO   |
+| <dquote>                      | "           | TODO   |
+| <squote>                      | '           | TODO   |
+| <backtick>                    | `           | TODO   |
+| <paren_o>                     | (           | TODO   |
+| <paren_c>                     | )           | TODO   |
+| <bracket_o>                   | [           | TODO   |
+| <bracket_c>                   | ]           | TODO   |
+| <brace_o>                     | {           | TODO   |
+| <brace_c>                     | }           | TODO   |
+| <angle_o>                     | <           | TODO   |
+| <angle_c>                     | >           | TODO   |
+| <plus>                        | +           | TODO   |
+| <minus>                       | -           | TODO   |
+| <asterisk>                    | *           | TODO   |
+| <equal>                       | =           | TODO   |
+| <slash>                       | /           | TODO   |
+| <backslash>                   | \           | TODO   |
+| <caret>                       | ^           | TODO   |
+| <tilde>                       | ~           | TODO   |
+| <pipe>                        | \vert       | TODO   |
+| <underscore>                  | _           | TODO   |
+| <sharp>                       | #           | TODO   |
+| <at>                          | @           | TODO   |
+| <dollar>                      | $           | TODO   |
+| <percent>                     | %           | TODO   |
+| <and>                         | &           | TODO   |
+
+* WIP Roadmap [0/5]
+Almost in priority order.
+** TODO Characters/Keys support
+See list of characters/keys above.
+** TODO Server IP display at server startup
+During server startup, display of the server IP.
+That will help setting up the controller device connexion.
+
+Should handle multiple interfaces.
+Example: case with multiple network cards (lan + wifi)
+** TODO Scrolling
+Add scroll support (2 fingers swipe on the controller device)
+** TODO Gestures
+Appart from scrolling, support 3 fingers gestures shortcuts
+** TODO Layouts Support
+Currently only JIS layout is supported.
+Add US ANSI, US ISO and some more common layouts.
 
 * What's next
 For now, Windows plateform is supported for the server.
