@@ -24,15 +24,13 @@
 (defn get-screen-size []
   "Return the screen dimensions as a typle {:width :height}"
   (let [dimensions (.getScreenSize (Toolkit/getDefaultToolkit))]
-    {:width (.getWidth dimensions) :height (.getHeight dimensions)}
-    ))
+    {:width (.getWidth dimensions) :height (.getHeight dimensions)}))
 
 
 ;;; ==================== automation ====================
 
 
 (def robot (new Robot))
-(.setAutoDelay robot 50)                ; delay between key presses in ms
 
 
 ;;; ==================== mouse related ====================
@@ -118,9 +116,10 @@ Data format: X+n,Y+m where + can also be - and n and m are numbers.
 What to do if n and m are not parseable? Actually an exception is raised. 
 Return true if data are correctly formated for the operation.
 False otherwise."
-  (println "move mouse!" data)
+  ;; (println "move mouse!" data)
   (let [[_ x-offset y-offset] (re-matches #"X([+-]\d+),Y([+-]\d+)" data)
         mouse-pos (get-mouse-position)]
+    (.setAutoDelay robot 0)                ; delay between key presses in ms
     (set-mouse-position (+ (:x mouse-pos) (Integer. x-offset))
                         (+ (:y mouse-pos) (Integer. y-offset)))
     true))
@@ -148,6 +147,7 @@ ie: a b c C-a
 will push in sequence a,b,c then Ctrl+a"
   (let [chords (str/split data #" ")]
     (println "keys received: " chords)
+    (.setAutoDelay robot 50)                ; delay between key presses in ms
     (doseq [c chords] (parse-key-chord c))
     true)
   )
