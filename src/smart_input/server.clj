@@ -19,6 +19,8 @@
 
 ;;; my keyboard layout lib
 (use '[smart-input.keyboard-layout :as kbl])
+;;; my network utilities lib
+(use '[smart-input.network :as netwk])
 
 ;;; screen settings
 (defn get-screen-size []
@@ -185,6 +187,10 @@ TODO deal with different buttons, for now only left click (=> data ignored)"
 (defn -main []
   "Starting the udp server!"
   (reset! running true)
+  (println (map (fn [i]
+                  (let [[name ip] i]
+                    (format "%s\n\t%s\n" name ip)))
+                (netwk/listNetworkInterfaces)))
   (println "running.\nPort:" socket-port "\nKeyboard layout:" key-layout)
   
   ;; waiting loop
