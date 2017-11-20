@@ -1,4 +1,5 @@
-(ns smart-input.server)
+(ns smart-input.server
+  (:gen-class))
 
 ;; Ref: https://gist.github.com/stingh711/3760481
 ;; ==============================================
@@ -107,9 +108,6 @@ chord parameter syntax: C-a"
 
 ;; socket
 (def socket-port 5200)
-(def socket (DatagramSocket. socket-port))     ; need to learn the meaning of that writing style...
-(def running (atom true))               ;can we change that @running at runtime?
-(def buffer (make-array Byte/TYPE 1024))
 
 
 (defn parse-mouse-data-move [data]
@@ -186,11 +184,20 @@ TODO deal with different buttons, for now only left click (=> data ignored)"
 
 (defn -main []
   "Starting the udp server!"
-  (reset! running true)
+
+  (def socket (DatagramSocket. socket-port))     ; need to learn the meaning of that writing style...
+  (def running (atom true))               ;can we change that @running at runtime?
+  (def buffer (make-array Byte/TYPE 1024))
+
+  ;;(reset! running true)
+
+  ;; listing of network interfaces
   (println (map (fn [i]
                   (let [[name ip] i]
                     (format "%s\n\t%s\n" name ip)))
                 (netwk/listNetworkInterfaces)))
+
+  ;; display of listening port and detected keyboard layout
   (println "running.\nPort:" socket-port "\nKeyboard layout:" key-layout)
   
   ;; waiting loop
