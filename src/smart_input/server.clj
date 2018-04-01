@@ -34,6 +34,7 @@
 
 
 (def robot (new Robot))
+(def autodelayKey 50)
 
 
 ;;; ==================== mouse related ====================
@@ -97,11 +98,10 @@ chord parameter syntax: C-a"
   (let [start (first chord) next (rest chord)]
     (case start
       "C" (do (.keyPress robot KeyEvent/VK_CONTROL) (key-press-chord next) (.keyRelease robot KeyEvent/VK_CONTROL))
-      "A" (do (println "pressing alt + " next) (.keyPress robot KeyEvent/VK_ALT) (key-press-chord next) (.keyRelease robot KeyEvent/VK_ALT))
+      "A" (do (.keyPress robot KeyEvent/VK_ALT) (key-press-chord next) (.keyRelease robot KeyEvent/VK_ALT))
       "S" (do (.keyPress robot KeyEvent/VK_SHIFT) (key-press-chord next) (.keyRelease robot KeyEvent/VK_SHIFT))
       (key-press start)
       )))
-
 
 
 ;;; ==================== server related ===================
@@ -135,7 +135,7 @@ Data format:
 and combinaisons will be possible like:
 - C-A-b wil press Ctrl + Alt + b"
   (let [chord (str/split chord-data #"-")]
-    (println "parsing chord:" chord)
+    ;; (println "parsing chord:" chord)
     (key-press-chord chord))
   )
 
@@ -146,8 +146,8 @@ Mutliple chords can be sent if separated by a space.
 ie: a b c C-a
 will push in sequence a,b,c then Ctrl+a"
   (let [chords (str/split data #" ")]
-    (println "keys received: " chords)
-    (.setAutoDelay robot 50)                ; delay between key presses in ms
+    ;; (println "keys received: " chords)
+    (.setAutoDelay robot autodelayKey)                ; delay between key presses in ms
     (doseq [c chords] (parse-key-chord c))
     true)
   )
@@ -156,9 +156,19 @@ will push in sequence a,b,c then Ctrl+a"
 (defn parse-mouse-data-click [data]
   "Makes the mouse click
 TODO deal with different buttons, for now only left click (=> data ignored)"
-  (println "mouse click!" data)
+  ;; (println "mouse click!" data)
   (.mousePress robot InputEvent/BUTTON1_MASK)
   (.mouseRelease robot InputEvent/BUTTON1_MASK)
+  true)
+
+
+(defn parse-mouse-data-scroll [data]
+  "Makes the mouse scroll
+@parameter data is the ammount of vertical scroll
+can be positive of negative"
+  ;; (println "mouse scrool!" data)
+  (.setAutoDelay robot 0)
+  (.mouseWheel robot (Integer.  data))
   true)
 
 
@@ -167,15 +177,17 @@ TODO deal with different buttons, for now only left click (=> data ignored)"
   "WIP parse received messages and make action.
 - MOUSE_MOVE :: moving the mouse
 - MOUSE_CLICK :: click the mouse button (1:left)
+- MOUSE_SCROLL :: scroll wheel
 - EXIT :: stoping the server from the client"
   (let [message (String. (.getData packet) 0 (.getLength packet))
         [_ signal data] (re-matches #"^([A-Z_]+):(.*)" message)]
-    (println "received message: " message)
+    ;; (println "received message: " message)
 
     ;; what messages do we handle?
     (case signal
       "MOUSE_MOVE" (parse-mouse-data-move data)
       "MOUSE_CLICK" (parse-mouse-data-click data)
+      "MOUSE_SCROLL" (parse-mouse-data-scroll data)
       "KEY_PRESS" (parse-key-data data)
       false) 
     ;; TODO add other signals
@@ -207,6 +219,6 @@ TODO deal with different buttons, for now only left click (=> data ignored)"
         (.receive socket packet)
         (reset! running  @(future (parse packet)))
         ;; @ of a future will deference it and return the value of the computation!
-        (println "new running state >" @running "<")
+        ;; (println "new running state >" @running "<")
         )))
   (System/exit 0))
